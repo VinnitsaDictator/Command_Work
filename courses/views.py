@@ -42,3 +42,6 @@ def index(request):
         }
 
     return render(request, 'courses/index.html', context)
+
+def courses(request):
+    return render(request, 'courses/Courses.html')
