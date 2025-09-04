@@ -8,7 +8,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 
     <style>
-       
+       /*стиль текста сайта*/
         * { margin:0; padding:0; box-sizing:border-box; }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -16,7 +16,7 @@
         }
         a { text-decoration:none; }
 
-       
+       /*дизайн вехней части сайта */
         .header {
             background: linear-gradient(135deg,#667eea 0%,#764ba2 100%);
             color:#fff; padding:1rem 0; position:fixed; width:100%; top:0; z-index:1000;
@@ -38,7 +38,114 @@
         .btn-primary { background:#ff6b6b; color:#fff; }
         .btn-primary:hover { background:#ff5252; transform:translateY(-2px); }
 
-       
+        /* Улучшенная панель фильтров */
+        .filters-panel {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        .filters-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 2fr;
+            gap: 1.5rem;
+            align-items: end;
+            margin-bottom: 1rem;
+        }
+        
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .filter-label {
+            font-weight: 600;
+            color: #4a5568;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+        
+        .input, .select {
+            padding:.8rem 1rem; 
+            border:1px solid #e2e8f0; 
+            border-radius:12px; 
+            background:#fff; 
+            outline:none;
+            transition: border-color 0.3s ease;
+        }
+        
+        .input:focus, .select:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+         /* Ценовой диапазон */
+        .price-range {
+            display: flex;
+            gap: 0.75rem;
+            align-items: center;
+        }
+        
+        .price-input {
+            flex: 1;
+            padding: 0.6rem 0.8rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            text-align: center;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+        
+        .price-input:focus {
+            border-color: #667eea;
+        }
+        
+        .price-separator {
+            color: #718096;
+            font-weight: 500;
+        }
+
+        /*дизай кнопок фильтрации */  
+        .filter-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            margin-top: 1rem;
+        }
+        
+        .btn-secondary {
+            background: #e2e8f0;
+            color: #4a5568;
+            padding: 0.6rem 1.2rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-secondary:hover {
+            background: #cbd5e0;
+        }
+        
+        .btn-apply {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 0.6rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-apply:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+
+       /*центрирование текста и тайтлов  , виравнивание курсов*/
         .hero {
             background: linear-gradient(135deg,#667eea 0%,#764ba2 100%);
             padding:120px 0 60px; text-align:center; color:#fff; position:relative; overflow:hidden;
@@ -58,7 +165,7 @@
         .section-title h2 { font-size:2rem; color:#2d3748; }
         .section-title p { color:#718096; }
 
-        
+        /*дизайн лаяутов курсов*/
         .courses { padding:60px 0 90px; background:#f7fafc; }
         .toolbar {
             display:flex; gap:1rem; justify-content:center; align-items:center; margin-bottom:1.5rem; flex-wrap:wrap;
@@ -89,16 +196,34 @@
         .course-meta { display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem; }
         .course-price { font-size:1.1rem; font-weight:700; color:#667eea; }
         .course-rating { color:#fbb040; }
+
+    /*центрировние , растягивание кнопики "дитальнніше"*/
         .btn-block { width:100%; display:block; text-align:center; }
 
-        
+        /*дизай нижней части сайта , кнопкоп конфиденсеальность и тд*/
         .footer { background:#2d3748; color:#fff; padding:40px 0; text-align:center; }
         .footer-content { max-width:1200px; margin:0 auto; padding:0 2rem; }
         .footer-links { display:flex; justify-content:center; gap:2rem; margin-bottom:1.25rem; flex-wrap:wrap; }
         .footer-links a { color:#fff; opacity:.85; }
         .footer-links a:hover { opacity:1; }
 
-        
+        /*дизайн результатов после поиска*/
+          .search-results {
+            background: #e6fffa;
+            border: 1px solid #38b2ac;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            color: #234e52;
+        }
+
+        /*уберает другие курсы если они не подходят под фильтрацию*/
+        .course-card.hidden {
+            display: none !important;
+        }
+
+
+        /*анимация тайтла курси*/
         @keyframes fadeInUp { from { opacity:0; transform:translateY(30px);} to {opacity:1; transform:translateY(0);} }
         .fade-in { opacity:0; transform:translateY(30px); transition: all .6s ease; }
         .fade-in.visible { opacity:1; transform:translateY(0); }
@@ -107,6 +232,7 @@
             .nav-links { display:none; }
             .hero h1 { font-size:2.2rem; }
         }
+
     </style>
 </head>
 <body>
@@ -153,34 +279,77 @@
             </div>
 
             
-            <div class="toolbar fade-in" aria-hidden="true">
-                <input class="input" type="text" placeholder="Пошук курсу..." />
-                <select class="select">
-                    <option>Усі категорії</option>
-                    <option>Програмування</option>
-                    <option>Дизайн</option>
-                    <option>Маркетинг</option>
-                </select>
-                <select class="select">
-                    <option>Сортування: популярні</option>
-                    <option>За ціною (зрост.)</option>
-                    <option>За ціною (спад.)</option>
-                    <option>За рейтингом</option>
-                </select>
+             <div class="filters-panel fade-in">
+                <div class="filters-row">
+                    <div class="filter-group">
+                        <label class="filter-label">Пошук</label>
+                        <input class="input" type="text" id="searchInput" placeholder="Назва курсу..." />
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label class="filter-label">Категорія</label>
+                        <select class="select" id="categoryFilter">
+                            <option value="">Усі категорії</option>
+                            <option value="programming">Програмування</option>
+                            <option value="design">Дизайн</option>
+                            <option value="marketing">Маркетинг</option>
+                            <option value="business">Бізнес</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label class="filter-label">Сортування</label>
+                        <select class="select" id="sortFilter">
+                            <option value="popular">За популярністю</option>
+                            <option value="price-asc">За ціною (зростання)</option>
+                            <option value="price-desc">За ціною (спадання)</option>
+                            <option value="rating">За рейтингом</option>
+                            <option value="name">За назвою</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label class="filter-label">Ціна (грн)</label>
+                        <div class="price-range">
+                            <input type="number" class="price-input" id="priceMin" placeholder="Від" min="0">
+                            <span class="price-separator">—</span>
+                            <input type="number" class="price-input" id="priceMax" placeholder="До" min="0">
+                            <label style="margin-left: 1rem;">
+                                <input type="checkbox" id="freeOnly"> Тільки безкоштовні
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div id="noResults" style="display:none; text-align:center; margin-top:20px;">
+                    <p>Нічого не знайдено 😕</p>
+                </div>
+
+                <div class="filter-actions">
+                    <button class="btn-secondary" onclick="clearFilters()">Скинути</button>
+                    <button class="btn-apply" onclick="applyFilters()">Застосувати</button>
+                </div>
+              
+
             </div>
 
-            <div class="courses-grid">
+               <div id="searchResults" class="search-results" style="display: none;">
+                <strong>Знайдено курсів:</strong> <span id="resultsCount">0</span>
+            </div>
+
+            <div class="courses-grid" id="coursesGrid">
 
                 {% if courses %}
                     {% for course in courses %}
-                    <div class="course-card fade-in">
-                        <div class="course-image">
-                            {% if course.image %}
-                                <img src="{{ course.image.url }}" alt="{{ course.title }}">
-                            {% else %}
-                                <i class="fas fa-book" aria-hidden="true"></i>
-                            {% endif %}
-                        </div>
+                   <div class="course-card fade-in"
+                        data-title="{{ course.title|lower }}"
+                        data-category="{{ course.category.slug }}"
+                        data-price="{{ course.price|floatformat:0 }}"
+                        data-rating="{{ course.rating|default:0 }}">
+     
+                        <img src="{{ course.image.url }}" alt="{{ course.title }}">
+                        <h3>{{ course.title }}</h3>
+                        <p>{{ course.short_description }}</p>
+            </div>
                         <div class="course-content">
                             <h3 class="course-title">{{ course.title }}</h3>
                             <p class="course-description">{{ course.description|default:"Короткий опис курсу" |truncatewords:22 }}</p>
@@ -207,7 +376,11 @@
                 {% else %}
                    
                     {% for i in "123456" %}
-                    <div class="course-card fade-in">
+                    <div class="course-card fade-in"
+                        data-title="Приклад курсу {{ forloop.counter }}"
+                        data-category="programming"
+                        data-price="{{ forloop.counter|add:9 }}00"
+                        data-rating="4">
                         <div class="course-image">
                             <i class="fas fa-book-open" aria-hidden="true"></i>
                         </div>
@@ -252,7 +425,118 @@
     </footer>
 
     <script>
+
+    function applyFilters() {
+    const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+    const category = document.getElementById('categoryFilter').value;
+    const sortBy = document.getElementById('sortFilter').value;
+    const priceMin = parseInt(document.getElementById('priceMin').value) || 0;
+    const priceMax = parseInt(document.getElementById('priceMax').value) || Infinity;
+    const freeOnly = document.getElementById('freeOnly').checked;
+    
+    let courses = Array.from(document.querySelectorAll('.course-card'));
+    let visibleCount = 0;
+
+    courses.forEach(course => {
+        const title = course.dataset.title.toLowerCase();
+        const courseCategory = course.dataset.category;
+        const price = parseInt(course.dataset.price);
         
+        let isVisible = true;
+
+        if (searchTerm && !title.includes(searchTerm)) {
+            isVisible = false;
+        }
+
+        if (category && courseCategory !== category) {
+            isVisible = false;
+        }
+
+        if (freeOnly && price !== 0) {
+            isVisible = false;
+        } else if (!freeOnly && (price < priceMin || price > priceMax)) {
+            isVisible = false;
+        }
+        
+        if (isVisible) {
+            course.classList.remove('hidden');
+            visibleCount++;
+        } else {
+            course.classList.add('hidden');
+        }
+    });
+
+    const visibleCourses = courses.filter(course => !course.classList.contains('hidden'));
+    sortCourses(visibleCourses, sortBy);
+
+    document.getElementById('resultsCount').textContent = visibleCount;
+    document.getElementById('searchResults').style.display = 'block';
+
+
+    const noResults = document.getElementById('noResults');
+    if (visibleCount === 0) {
+        noResults.style.display = 'block';
+    } else {
+        noResults.style.display = 'none';
+    }
+}
+
+        function sortCourses(courses, sortBy) {
+            const grid = document.getElementById('coursesGrid');
+            
+            courses.sort((a, b) => {
+                switch (sortBy) {
+                    case 'price-asc':
+                        return parseInt(a.dataset.price) - parseInt(b.dataset.price);
+                    case 'price-desc':
+                        return parseInt(b.dataset.price) - parseInt(a.dataset.price);
+                    case 'rating':
+                        return parseInt(b.dataset.rating) - parseInt(a.dataset.rating);
+                    case 'name':
+                        return a.dataset.title.localeCompare(b.dataset.title);
+                    default:
+                        return 0;
+                }
+            });
+            
+
+            courses.forEach(course => {
+                grid.appendChild(course);
+            });
+        }
+        
+
+        function clearFilters() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('categoryFilter').value = '';
+            document.getElementById('sortFilter').value = 'popular';
+            document.getElementById('priceMin').value = '';
+            document.getElementById('priceMax').value = '';
+            document.getElementById('freeOnly').checked = false;
+            
+            document.querySelectorAll('.course-card').forEach(course => {
+                course.classList.remove('hidden');
+            });
+            
+            document.getElementById('searchResults').style.display = 'none';
+            const noResults = document.getElementById('noResults');
+        if (visibleCount === 0) {
+             noResults.style.display = 'block';
+        } else {
+            noResults.style.display = 'none';
+        }
+        }
+        
+
+        document.getElementById('searchInput').addEventListener('input', applyFilters);
+        document.getElementById('categoryFilter').addEventListener('change', applyFilters);
+        document.getElementById('sortFilter').addEventListener('change', applyFilters);
+        document.getElementById('freeOnly').addEventListener('change', applyFilters);
+        
+        document.getElementById('priceMin').addEventListener('input', applyFilters);
+        document.getElementById('priceMax').addEventListener('input', applyFilters);
+        
+
         function handleScrollAnimations() {
             const elements = document.querySelectorAll('.fade-in');
             const wh = window.innerHeight;
@@ -264,7 +548,6 @@
         window.addEventListener('scroll', handleScrollAnimations);
         window.addEventListener('load', handleScrollAnimations);
 
-        
         document.querySelectorAll('a[href^="#"]').forEach(a => {
             a.addEventListener('click', e => {
                 const target = document.querySelector(a.getAttribute('href'));
