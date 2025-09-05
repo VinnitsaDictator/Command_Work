@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Про нас</title>
-    {% load static %}
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
    * {
@@ -100,9 +99,133 @@ body {
     transform: translateY(-2px);
 }
 
-/* Section About */
+/* баннер тексту про нас */
+.hero-banner {
+    margin-top: 50px;
+    height: 30vh;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.9) 0%, rgba(118, 75, 162, 0.9) 100%), 
+                url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 300"><defs><pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/></pattern></defs><rect width="100%" height="100%" fill="url(%23grid)"/></svg>');
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-banner::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+}
+
+.hero-content {
+    text-align: center;
+    color: white;
+    z-index: 2;
+    position: relative;
+    max-width: 800px;
+    padding: 0 2rem;
+}
+
+.hero-content h1 {
+    font-size: 4rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    animation: heroFadeIn 1.2s ease-out;
+}
+
+.hero-content p {
+    font-size: 1.4rem;
+    margin-bottom: 2rem;
+    opacity: 0.95;
+    animation: heroFadeIn 1.2s ease-out 0.3s both;
+}
+
+.hero-icons {
+    display: flex;
+    justify-content: center;
+    gap: 3rem;
+    margin-top: 3rem;
+    animation: heroFadeIn 1.2s ease-out 0.6s both;
+}
+
+.hero-icon {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    color: white;
+    transition: transform 0.3s ease;
+}
+
+.hero-icon:hover {
+    transform: translateY(-5px);
+}
+
+.hero-icon i {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+    opacity: 0.9;
+    font-style: normal;
+    display: inline-block;
+    line-height: 1;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    backdrop-filter: blur(10px);
+}
+
+.hero-icon span {
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+/*дизайн фону ( ) */
+.floating-shape {
+    position: absolute;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    animation: float 6s ease-in-out infinite;
+}
+
+.floating-shape:nth-child(1) {
+    width: 60px;
+    height: 60px;
+    top: 20%;
+    left: 10%;
+    animation-delay: 0s;
+}
+
+.floating-shape:nth-child(2) {
+    width: 40px;
+    height: 40px;
+    top: 60%;
+    right: 15%;
+    animation-delay: 2s;
+}
+
+.floating-shape:nth-child(3) {
+    width: 80px;
+    height: 80px;
+    bottom: 20%;
+    left: 20%;
+    animation-delay: 4s;
+}
+
+/* Селекція про нас */
 .section {
-    padding: 120px 0 80px;
+    padding: 80px 0;
     text-align: center;
     position: relative;
     overflow: hidden;
@@ -111,19 +234,6 @@ body {
 .section-title {
     text-align: center;
     margin-bottom: 3rem;
-}
-
-.section-title h1 {
-    font-size: 3rem;
-    margin-bottom: 1rem;
-    color: #2d3748;
-    animation: fadeInUp 1s ease-out;
-}
-
-.section-title p {
-    font-size: 1.3rem;
-    color: #718096;
-    animation: fadeInUp 1s ease-out 0.2s both;
 }
 
 .about-content {
@@ -180,7 +290,7 @@ body {
     text-align: center;
 }
 
-/* Footer */
+/*Footer*/
 .footer {
     background: #2d3748;
     color: white;
@@ -194,7 +304,7 @@ body {
     opacity: 0.8;
 }
 
-/* Animations */
+/* Анімаціі */
 @keyframes fadeInUp {
     from {
         opacity: 0;
@@ -206,18 +316,56 @@ body {
     }
 }
 
-/* Media Queries */
+@keyframes heroFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(40px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    25% { transform: translateY(-20px) rotate(90deg); }
+    50% { transform: translateY(0px) rotate(180deg); }
+    75% { transform: translateY(-10px) rotate(270deg); }
+}
+
+/* Адаптація під малі екрани */
 @media (max-width: 768px) {
     .nav-links {
         display: none;
     }
 
-    .section-title h1 {
+    .hero-banner {
+        height: 20vh;
+    }
+
+    .hero-content h1 {
+        font-size: 2.5rem;
+    }
+
+    .hero-content p {
+        font-size: 1.2rem;
+    }
+
+    .hero-icons {
+        gap: 1.5rem;
+    }
+
+    .hero-icon i {
         font-size: 2rem;
     }
 
     .about-content {
         padding: 0 1rem;
+    }
+
+    .floating-shape {
+        display: none;
     }
 }
 
@@ -254,11 +402,19 @@ body {
         </nav>
     </header>
 
-    <section class="section">
-        <div class="section-title">
+    <!-- Головний банер сторінки -->
+    <section class="hero-banner">
+        <div class="floating-shape"></div>
+        <div class="floating-shape"></div>
+        <div class="floating-shape"></div>
+        
+        <div class="hero-content">
             <h1>Про нас</h1>
-            <p>Дізнайтеся більше про нашу платформу та команду</p>
+            <p>Дізнайтеся більше про нашу платформу та команду, яка робить навчання доступним та захоплюючим</p>
         </div>
+    </section>
+
+    <section class="section">
         <div class="about-content">
             <h2>Хто ми?</h2>
             <p>
