@@ -46,4 +46,7 @@ def about(request):
     return render(request, 'courses/about.html')
 def courses(request):
     return render(request, 'courses/Courses.html')
+def contacts(request):
+    return render(request, 'courses/contacts.html')
+
 
