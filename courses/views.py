@@ -48,5 +48,10 @@ def courses(request):
     return render(request, 'courses/Courses.html')
 def contacts(request):
     return render(request, 'courses/contacts.html')
+def privacypolicy(request):
+    return render(request, 'privacypolicy.html')
+def termsofuse(request):
+    return render(request, 'termsofuse.html')
+
 
 
