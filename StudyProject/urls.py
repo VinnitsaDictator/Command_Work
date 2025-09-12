@@ -7,5 +7,7 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('courses/', views.courses, name='courses'),
     path('about/', views.about, name='about'),  # ← обязательно!
-    path('contacts/', views.contacts, name='contacts')
+    path('contacts/', views.contacts, name='contacts'),
+    path('privacy-policy/', views.privacypolicy, name='privacypolicy'),
+    path('terms-of-use/', views.termsofuse, name='termsofuse'),
 ]
