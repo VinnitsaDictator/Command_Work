@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="login-container">
+    <h2>Увійти</h2>
+
+    {% if form.errors %}
+        <p style="color: red;">Невірний логін або пароль. Спробуйте ще раз.</p>
+    {% endif %}
+
+    <form method="post">
+        {% csrf_token %}
+        <div>
+            <label for="id_username">Логін:</label>
+            {{ form.username }}
+        </div>
+        <div>
+            <label for="id_password">Пароль:</label>
+            {{ form.password }}
+        </div>
+        <button type="submit">Увійти</button>
+    </form>
+
+    <p>Ще немає акаунта? <a href="#">Зареєструватися</a></p>
+</div>
+{% endblock %}
