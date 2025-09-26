@@ -1,0 +1,156 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EduPlatform — Контакти</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+  <style>
+    * {margin:0; padding:0; box-sizing:border-box;}
+    body {
+      font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      line-height:1.6; color:#333; background:#f8fafc;
+    }
+    a{text-decoration:none;}
+
+    .header {
+      background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);
+      color:#fff; padding:1rem 0; position:fixed; width:100%; top:0; z-index:1000;
+      box-shadow:0 2px 20px rgba(0,0,0,.1);
+    }
+    .navbar {
+      max-width:1200px; margin:0 auto; display:flex; justify-content:space-between; align-items:center; padding:0 2rem;
+    }
+    .logo {font-size:1.8rem; font-weight:bold; color:#fff;}
+    .nav-links {display:flex; list-style:none; gap:2rem;}
+    .nav-links a {color:#fff; transition:opacity .3s;}
+    .nav-links a:hover{opacity:.8;}
+    .auth-buttons{display:flex; gap:1rem;}
+    .btn{padding:.7rem 1.5rem; border:none; border-radius:25px; cursor:pointer; font-weight:500;}
+    .btn-outline{background:transparent; color:#fff; border:2px solid #fff;}
+    .btn-outline:hover{background:#fff; color:#667eea;}
+    .btn-primary{background:#ff6b6b; color:#fff;}
+    .btn-primary:hover{background:#ff5252;}
+
+    
+    .hero {
+      background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);
+      padding:120px 0 60px; text-align:center; color:#fff; position:relative;
+    }
+    .hero h1{font-size:3rem; margin-bottom:.5rem; animation:fadeInUp 1s;}
+    .hero p{font-size:1.15rem; animation:fadeInUp 1s .2s both;}
+
+  
+    .container {max-width:1200px; margin:0 auto; padding:0 2rem;}
+
+    /* Контактна секція */
+    .contact-section {padding:60px 0;}
+    .contact-grid {
+      display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+      gap:2rem; align-items:start;
+    }
+    .contact-card {
+      background:#fff; border-radius:15px; padding:2rem;
+      box-shadow:0 10px 30px rgba(0,0,0,.1); transition:.3s;
+    }
+    .contact-card:hover{transform:translateY(-6px); box-shadow:0 20px 40px rgba(0,0,0,.15);}
+    .contact-card h3 {color:#2d3748; margin-bottom:1rem;}
+    .contact-card p{color:#718096; margin-bottom:.5rem;}
+    .contact-info i{color:#667eea; margin-right:.6rem;}
+
+    /* Форма */
+    .form-group{margin-bottom:1rem;}
+    .form-control{
+      width:100%; padding:.8rem 1rem; border:1px solid #e2e8f0; border-radius:12px; outline:none;
+    }
+    .form-control:focus{border-color:#667eea; box-shadow:0 0 0 3px rgba(102,126,234,0.1);}
+    .btn-submit {
+      background:linear-gradient(135deg,#667eea,#764ba2); color:#fff; padding:.8rem 1.5rem;
+      border:none; border-radius:12px; cursor:pointer; transition:.3s;
+    }
+    .btn-submit:hover{transform:translateY(-2px); box-shadow:0 4px 12px rgba(102,126,234,0.3);}
+
+    /* Footer */
+    .footer {background:#2d3748; color:#fff; padding:40px 0; text-align:center;}
+    .footer-links{display:flex; justify-content:center; gap:2rem; flex-wrap:wrap; margin-bottom:1rem;}
+    .footer-links a{color:#fff; opacity:.85;}
+    .footer-links a:hover{opacity:1;}
+
+    @keyframes fadeInUp{from{opacity:0; transform:translateY(30px);} to{opacity:1; transform:translateY(0);}}
+  </style>
+</head>
+<body>
+<header class="header">
+  <nav class="navbar">
+    <a href="/" class="logo"><i class="fas fa-graduation-cap"></i> EduPlatform</a>
+    <ul class="nav-links">
+      <li><a href="/">Головна</a></li>
+      <li><a href="/courses/">Курси</a></li>
+      <li><a href="/about/">Про нас</a></li>
+      <li><a href="/contact/">Контакти</a></li>
+    </ul>
+    <div class="auth-buttons">
+      {% if user.is_authenticated %}
+        <a class="btn btn-outline"><i class="fas fa-user"></i> {{ user.username }}</a>
+        <a href="/admin/logout/" class="btn btn-primary">Вийти</a>
+      {% else %}
+        <a href="/admin/login/" class="btn btn-outline">Увійти</a>
+        <a href="#" class="btn btn-primary">Реєстрація</a>
+      {% endif %}
+    </div>
+  </nav>
+</header>
+
+<section class="hero">
+  <div class="hero-content">
+    <h1>Контакти</h1>
+    <p>Зв’яжіться з нами для консультацій чи співпраці</p>
+  </div>
+</section>
+
+<section class="contact-section">
+  <div class="container">
+    <div class="contact-grid">
+      <div class="contact-card contact-info">
+        <h3>Наші контакти</h3>
+        <p><i class="fas fa-map-marker-alt"></i> м. Київ, вул. Освіти, 10</p>
+        <p><i class="fas fa-phone"></i> +380 67 123 45 67</p>
+        <p><i class="fas fa-envelope"></i> support@eduplatform.com</p>
+        <p><i class="fas fa-clock"></i> Пн — Пт: 9:00 — 18:00</p>
+      </div>
+
+      <div class="contact-card">
+        <h3>Напишіть нам</h3>
+        <form method="post">
+          {% csrf_token %}
+          <div class="form-group">
+            <input type="text" class="form-control" name="name" placeholder="Ваше ім’я" required>
+          </div>
+          <div class="form-group">
+            <input type="email" class="form-control" name="email" placeholder="Email" required>
+          </div>
+          <div class="form-group">
+            <textarea class="form-control" name="message" rows="5" placeholder="Ваше повідомлення..." required></textarea>
+          </div>
+          <button type="submit" class="btn-submit">Надіслати</button>
+        </form>
+      </div>
+    </div>
+
+</section>
+
+<footer class="footer">
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="/about/">Про нас</a>
+                <a href="/contacts/">Контакти</a>
+                <a href="/privacy-policy/">Політика конфіденційності</a>
+                <a href="/terms-of-use/">Умови використання</a>
+            </div>
+            <p>&copy; 2025 EduPlatform. Всі права захищені.</p>
+        </div>
+    </footer>
+</body>
+</html>

@@ -303,6 +303,25 @@ body {
     font-size: 1rem;
     opacity: 0.8;
 }
+.footer-links {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+}
+
+.footer-links a {
+    color: #fff;
+    opacity: 0.85;
+    text-decoration: none;
+    transition: opacity 0.3s;
+}
+
+.footer-links a:hover {
+    opacity: 1;
+}
+
 
 /* Анімаціі */
 @keyframes fadeInUp {
@@ -450,9 +469,17 @@ body {
             </p>
         </div>
     </section>
+<footer class="footer">
+    <div class="footer-content">
+        <div class="footer-links">
+            <a href="/about/">Про нас</a>
+            <a href="/contacts/">Контакти</a>
+            <a href="/privacy-policy/">Політика конфіденційності</a>
+            <a href="/terms-of-use/">Умови використання</a>
+        </div>
+        <p>&copy; 2025 EduPlatform. Всі права захищені.</p>
+    </div>
+</footer>
 
-    <footer class="footer">
-        <p>&copy; 2025 Наш сайт. Всі права захищені.</p>
-    </footer>
 </body>
 </html>
