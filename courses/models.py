@@ -25,12 +25,12 @@ class Course(models.Model):
     title = models.CharField('Назва курсу', max_length=200)
     slug = models.SlugField(unique=True)
     description = models.TextField('Опис')
-    short_description = models.CharField('Короткий опис', max_length=300)
+    short_description = models.CharField('Короткий опис', max_length=300, blank=True)
     image = models.ImageField('Зображення', upload_to='courses/', blank=True, null=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='courses')
     instructor = models.ForeignKey(User, on_delete=models.CASCADE, related_name='courses')
     price = models.DecimalField('Ціна', max_digits=10, decimal_places=2, default=0)
-    difficulty = models.CharField('Складність', max_length=20, choices=DIFFICULTY_CHOICES)
+    difficulty = models.CharField('Складність', max_length=20, choices=DIFFICULTY_CHOICES, default='beginner')
     duration_hours = models.PositiveIntegerField('Тривалість (години)', default=0)
     is_published = models.BooleanField('Опубліковано', default=False)
     created_at = models.DateTimeField('Створено', auto_now_add=True)
@@ -62,7 +62,6 @@ class Lesson(models.Model):
     LESSON_TYPES = [
         ('video', 'Відео'),
         ('text', 'Текст'),
-        ('quiz', 'Тест'),
         ('assignment', 'Завдання'),
     ]
     

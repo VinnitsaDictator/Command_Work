@@ -501,113 +501,49 @@
                 <h2>Популярні курси</h2>
                 <p>Оберіть курс, який підходить саме вам</p>
             </div>
-            <div class="courses-grid">
-                {% for course in popular_courses %}
-                <div class="course-card fade-in">
-                    <div class="course-image">
-                        {% if course.image %}
-                            <img src="{{ course.image.url }}" alt="{{ course.title }}" style="width: 100%; height: 100%; object-fit: cover;">
-                        {% else %}
-                            <i class="fas fa-book"></i>
-                        {% endif %}
-                    </div>
-                    <div class="course-content">
-                        <h3 class="course-title">{{ course.title }}</h3>
-                        <p class="course-description">{{ course.description|truncatewords:20 }}</p>
-                        <div class="course-meta">
-                            <span class="course-price">
-                                {% if course.price == 0 %}
-                                    Безкоштовно
-                                {% else %}
-                                    {{ course.price }} грн
-                                {% endif %}
-                            </span>
-                            <div class="course-rating">
-                                {% for i in "12345" %}
-                                    {% if forloop.counter <= course.rating %}
-                                        <i class="fas fa-star"></i>
-                                    {% else %}
-                                        <i class="far fa-star"></i>
-                                    {% endif %}
-                                {% endfor %}
-                            </div>
-                        </div>
-                        <a href="#" class="btn btn-primary" style="width: 100%; display: block; text-align: center;">
-                            Детальніше
-                        </a>
-                    </div>
-                </div>
-                {% empty %}
-                <div class="course-card fade-in">
-                    <div class="course-image">
-                        <i class="fab fa-python"></i>
-                    </div>
-                    <div class="course-content">
-                        <h3 class="course-title">Python для початківців</h3>
-                        <p class="course-description">Вивчіть основи програмування на Python з нуля за 8 тижнів</p>
-                        <div class="course-meta">
-                            <span class="course-price">1200 грн</span>
-                            <div class="course-rating">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                            </div>
-                        </div>
-                        <a href="#" class="btn btn-primary" style="width: 100%; display: block; text-align: center;">
-                            Детальніше
-                        </a>
-                    </div>
-                </div>
-                <div class="course-card fade-in">
-                    <div class="course-image">
-                        <i class="fas fa-chart-line"></i>
-                    </div>
-                    <div class="course-content">
-                        <h3 class="course-title">Цифровий маркетинг</h3>
-                        <p class="course-description">Освойте сучасні інструменти та стратегії digital-маркетингу</p>
-                        <div class="course-meta">
-                            <span class="course-price">1800 грн</span>
-                            <div class="course-rating">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="far fa-star"></i>
-                            </div>
-                        </div>
-                        <a href="#" class="btn btn-primary" style="width: 100%; display: block; text-align: center;">
-                            Детальніше
-                        </a>
-                    </div>
-                </div>
-                <div class="course-card fade-in">
-                    <div class="course-image">
-                        <i class="fas fa-palette"></i>
-                    </div>
-                    <div class="course-content">
-                        <h3 class="course-title">UX/UI Дизайн</h3>
-                        <p class="course-description">Створюйте зручні та красиві інтерфейси для веб та мобільних додатків</p>
-                        <div class="course-meta">
-                            <span class="course-price">2200 грн</span>
-                            <div class="course-rating">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                            </div>
-                        </div>
-                        <a href="#" class="btn btn-primary" style="width: 100%; display: block; text-align: center;">
-                            Детальніше
-                        </a>
-                    </div>
-                </div>
-                {% endfor %}
-            </div>
+<div class="courses-grid">
+    {% for course in courses %}
+    <div class="course-card">
+        <div class="course-image">
+            {% if course.image %}
+                <img src="{{ course.image.url }}" alt="{{ course.title }}">
+            {% else %}
+                <img src="{% static 'images/default-course.jpg' %}" alt="{{ course.title }}">
+            {% endif %}
         </div>
-    </section>
+        <div class="course-body">
+            <h3>{{ course.title }}</h3>
+            <p>{{ course.short_description }}</p>
+            <p><strong>Категорія:</strong> {{ course.category.name }}</p>
+            <p><strong>Викладач:</strong> {{ course.instructor.username }}</p>
+            <p><strong>Ціна:</strong> 
+                {% if course.price == 0 %}
+                    Безкоштовно
+                {% else %}
+                    {{ course.price }} грн
+                {% endif %}
+            </p>
+
+
+            <div class="rating">
+                {% for i in "12345" %}
+                    {% if forloop.counter <= course.rating %}
+                        <i class="fas fa-star text-warning"></i>
+                    {% else %}
+                        <i class="far fa-star text-warning"></i>
+                    {% endif %}
+                {% endfor %}
+                <span>({{ course.reviews.count }})</span>
+            </div>
+
+
+            <a href="{{ course.get_absolute_url }}" class="btn btn-primary">Детальніше</a>
+        </div>
+    </div>
+    {% empty %}
+    <p>Курсів поки що немає.</p>
+    {% endfor %}
+</div>
 
     <!-- Stats Section -->
     <section class="stats">

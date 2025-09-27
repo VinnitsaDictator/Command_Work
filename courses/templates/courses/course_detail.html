@@ -1,0 +1,920 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ course.title }} - EduPlatform</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f8fafc;
+        }
+
+        /* шапка сайту */
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+        }
+
+        .navbar {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            text-decoration: none;
+            color: white;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            opacity: 0.8;
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.7rem 1.5rem;
+            border: none;
+            border-radius: 25px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            cursor: pointer;
+            display: inline-block;
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: white;
+            border: 2px solid white;
+        }
+
+        .btn-outline:hover {
+            background: white;
+            color: #667eea;
+        }
+
+        .btn-primary {
+            background: #ff6b6b;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #ff5252;
+            transform: translateY(-2px);
+        }
+
+        /* основний контейнер */
+        .main-container {
+            margin-top: 80px;
+            max-width: 1400px;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 3rem;
+        }
+
+        /* ліва колонка - контент курсу */
+        .course-content {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .course-hero {
+            position: relative;
+            height: 400px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .course-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .course-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .course-info {
+            padding: 2rem;
+        }
+
+        .course-header {
+            margin-bottom: 2rem;
+        }
+
+        .course-title {
+            font-size: 2.5rem;
+            color: #2d3748;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .course-meta {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #718096;
+            font-size: 0.95rem;
+        }
+
+        .rating {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .stars {
+            color: #fbb040;
+        }
+
+        .course-description {
+            font-size: 1.1rem;
+            color: #4a5568;
+            line-height: 1.8;
+            margin-bottom: 2rem;
+        }
+
+        /* вкладки */
+        .course-tabs {
+            border-bottom: 2px solid #e2e8f0;
+            margin-bottom: 2rem;
+        }
+
+        .tabs-nav {
+            display: flex;
+            list-style: none;
+            gap: 0;
+        }
+
+        .tab-button {
+            padding: 1rem 2rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            color: #718096;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .tab-button.active,
+        .tab-button:hover {
+            color: #667eea;
+            border-bottom-color: #667eea;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* програма курсу */
+        .curriculum-section {
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            color: #2d3748;
+            margin-bottom: 1rem;
+            padding: 1rem;
+            background: #f7fafc;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+
+        .lessons-list {
+            list-style: none;
+        }
+
+        .lesson-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem;
+            border-bottom: 1px solid #e2e8f0;
+            transition: background 0.3s ease;
+        }
+
+        .lesson-item:hover {
+            background: #f7fafc;
+        }
+
+        .lesson-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .lesson-icon {
+            width: 40px;
+            height: 40px;
+            background: #667eea;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .lesson-details h4 {
+            color: #2d3748;
+            margin-bottom: 0.25rem;
+        }
+
+        .lesson-details p {
+            color: #718096;
+            font-size: 0.9rem;
+        }
+
+        .lesson-duration {
+            color: #718096;
+            font-size: 0.9rem;
+        }
+
+        .free-badge {
+            background: #48bb78;
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            margin-left: 1rem;
+        }
+
+        /* відгуки */
+        .reviews-section {
+            margin-top: 2rem;
+        }
+
+        .review-item {
+            padding: 1.5rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            background: #f7fafc;
+        }
+
+        .review-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .reviewer-avatar {
+            width: 50px;
+            height: 50px;
+            background: #667eea;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .reviewer-info h4 {
+            color: #2d3748;
+            margin-bottom: 0.25rem;
+        }
+
+        .review-date {
+            color: #718096;
+            font-size: 0.9rem;
+        }
+
+        .review-text {
+            color: #4a5568;
+            line-height: 1.6;
+        }
+
+        /* права колонка - сайдбар */
+        .course-sidebar {
+            position: sticky;
+            top: 100px;
+            height: fit-content;
+        }
+
+        .purchase-card {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .price-section {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .current-price {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 0.5rem;
+        }
+
+        .btn-enroll {
+            width: 100%;
+            padding: 1rem;
+            font-size: 1.1rem;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 1rem;
+        }
+
+        .btn-enroll:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-preview {
+            width: 100%;
+            padding: 0.8rem;
+            background: transparent;
+            color: #667eea;
+            border: 2px solid #667eea;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-preview:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .course-features {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .features-title {
+            font-size: 1.3rem;
+            color: #2d3748;
+            margin-bottom: 1.5rem;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            padding: 0.5rem 0;
+        }
+
+        .feature-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .feature-text {
+            color: #4a5568;
+        }
+
+        /* інструктор */
+        .instructor-card {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-top: 2rem;
+        }
+
+        .instructor-header {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .instructor-avatar {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .instructor-info h3 {
+            color: #2d3748;
+            margin-bottom: 0.5rem;
+        }
+
+        .instructor-title {
+            color: #667eea;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .instructor-stats {
+            display: flex;
+            gap: 1rem;
+            font-size: 0.9rem;
+            color: #718096;
+        }
+
+        .instructor-bio {
+            color: #4a5568;
+            line-height: 1.6;
+        }
+
+        /* підвал */
+        .footer {
+            background: #2d3748;
+            color: white;
+            padding: 40px 0;
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-links a {
+            color: white;
+            text-decoration: none;
+            opacity: 0.8;
+            transition: opacity 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            opacity: 1;
+        }
+
+        /* мобільна версія */
+        @media (max-width: 1024px) {
+            .main-container {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            
+            .course-sidebar {
+                position: static;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .navbar .nav-links {
+                display: none;
+            }
+            
+            .main-container {
+                padding: 1rem;
+            }
+            
+            .course-title {
+                font-size: 2rem;
+            }
+            
+            .course-meta {
+                gap: 1rem;
+            }
+            
+            .tabs-nav {
+                flex-wrap: wrap;
+            }
+            
+            .tab-button {
+                padding: 0.8rem 1rem;
+                font-size: 0.9rem;
+            }
+        }
+
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="navbar">
+            <a href="/" class="logo">
+                <i class="fas fa-graduation-cap"></i> EduPlatform.TMWORK
+            </a>
+            <ul class="nav-links">
+                <li><a href="/">Головна</a></li>
+                <li><a href="/courses/">Курси</a></li>
+                <li><a href="/about/">Про нас</a></li>
+                <li><a href="/contacts/">Контакти</a></li>
+            </ul>
+            <div class="auth-buttons">
+                {% if user.is_authenticated %}
+                    <a href="#" class="btn btn-outline">
+                        <i class="fas fa-user"></i> {{ user.username }}
+                    </a>
+                    <a href="/admin/logout/" class="btn btn-primary">Вийти</a>
+                {% else %}
+                    <a href="/admin/login/" class="btn btn-outline">Увійти</a>
+                    <a href="#" class="btn btn-primary">Реєстрація</a>
+                {% endif %}
+            </div>
+        </nav>
+    </header>
+
+    <div class="main-container">
+        <div class="course-content fade-in">
+            <div class="course-hero">
+                {% if course.image %}
+                    <img src="{{ course.image.url }}" alt="{{ course.title }}" class="course-image">
+                {% else %}
+                    <i class="fas fa-book" style="font-size: 4rem; color: white;"></i>
+                {% endif %}
+                <div class="course-badge">{{ course.get_difficulty_display }}</div>
+            </div>
+
+            <div class="course-info">
+                <div class="course-header">
+                    <h1 class="course-title">{{ course.title }}</h1>
+                    <div class="course-meta">
+                        <div class="meta-item">
+                            <i class="fas fa-user"></i>
+                            <span>{{ course.instructor.get_full_name|default:course.instructor.username }}</span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-users"></i>
+                            <span>{{ course.total_enrollments }} студентів</span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-clock"></i>
+                            <span>{{ course.duration_hours }} годин</span>
+                        </div>
+                        <div class="rating">
+                            <div class="stars">
+                                {% for i in "12345" %}
+                                    {% if forloop.counter <= course.rating %}
+                                        <i class="fas fa-star"></i>
+                                    {% else %}
+                                        <i class="far fa-star"></i>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                            <span>({{ course.reviews.count }} відгуків)</span>
+                        </div>
+                    </div>
+                    <p class="course-description">{{ course.description }}</p>
+                </div>
+                <div class="course-tabs">
+                    <ul class="tabs-nav">
+                        <li><button class="tab-button active" data-tab="overview">Огляд</button></li>
+                        <li><button class="tab-button" data-tab="curriculum">Програма</button></li>
+                        <li><button class="tab-button" data-tab="instructor">Викладач</button></li>
+                        <li><button class="tab-button" data-tab="reviews">Відгуки</button></li>
+                    </ul>
+                </div>
+
+                <div class="tabs-content">
+                    <div id="overview" class="tab-content active">
+                        <h3>Про курс:</h3>
+                        <div style="margin: 1rem 0;">
+                            {{ course.description|linebreaks }}
+                        </div>
+                        
+                        {% if course.short_description %}
+                        <h3>Короткий опис:</h3>
+                        <div style="margin: 1rem 0;">
+                            {{ course.short_description }}
+                        </div>
+                        {% endif %}
+                        
+                        <h3>Категорія:</h3>
+                        <div style="margin: 1rem 0;">
+                            <span style="background: #667eea; color: white; padding: 0.25rem 0.75rem; border-radius: 15px; font-size: 0.9rem;">
+                                {{ course.category.name }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <div id="curriculum" class="tab-content">
+                        <div class="curriculum-section">
+                            <h3 class="section-title">
+                                <i class="fas fa-list"></i> 
+                                Програма курсу ({{ course.lessons.count }} уроків)
+                            </h3>
+                            {% if course.lessons.count > 0 %}
+                                <ul class="lessons-list">
+                                    {% for lesson in course.lessons.all %}
+                                    <li class="lesson-item">
+                                        <div class="lesson-info">
+                                            <div class="lesson-icon">
+                                                {% if lesson.lesson_type == 'video' %}
+                                                    <i class="fas fa-play"></i>
+                                                {% elif lesson.lesson_type == 'text' %}
+                                                    <i class="fas fa-file-text"></i>
+                                                {% elif lesson.lesson_type == 'quiz' %}
+                                                    <i class="fas fa-question-circle"></i>
+                                                {% else %}
+                                                    <i class="fas fa-tasks"></i>
+                                                {% endif %}
+                                            </div>
+                                            <div class="lesson-details">
+                                                <h4>{{ lesson.title }}</h4>
+                                                <p>{{ lesson.get_lesson_type_display }}</p>
+                                            </div>
+                                            {% if lesson.is_free %}
+                                                <span class="free-badge">Безкоштовно</span>
+                                            {% endif %}
+                                        </div>
+                                        <div class="lesson-duration">
+                                            {% if lesson.duration_minutes %}
+                                                {{ lesson.duration_minutes }} хв
+                                            {% endif %}
+                                        </div>
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+                            {% else %}
+                                <p style="text-align: center; color: #718096; padding: 2rem;">
+                                    Уроки ще не додано до курсу
+                                </p>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div id="instructor" class="tab-content">
+                        <div class="instructor-card">
+                            <div class="instructor-header">
+                                <div class="instructor-avatar">
+                                    {{ course.instructor.first_name|slice:":1"|default:course.instructor.username|slice:":1" }}
+                                </div>
+                                <div class="instructor-info">
+                                    <h3>{{ course.instructor.get_full_name|default:course.instructor.username }}</h3>
+                                    <p class="instructor-title">Викладач</p>
+                                    <div class="instructor-stats">
+                                        <span><i class="fas fa-graduation-cap"></i> Досвід викладання</span>
+                                        <span><i class="fas fa-users"></i> {{ course.instructor.courses.count }} курсів</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="instructor-bio">
+                                <p>Досвідчений викладач у сфері {{ course.category.name|lower }}. Допомагає студентам освоювати нові навички та досягати своїх цілей у навчанні.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="reviews" class="tab-content">
+                        <div class="reviews-section">
+                            {% for review in course.reviews.all %}
+                            <div class="review-item">
+                                <div class="review-header">
+                                    <div class="reviewer-avatar">
+                                        {{ review.student.first_name|slice:":1"|default:review.student.username|slice:":1" }}
+                                    </div>
+                                    <div class="reviewer-info">
+                                        <h4>{{ review.student.get_full_name|default:review.student.username }}</h4>
+                                        <div class="rating">
+                                            <div class="stars">
+                                                {% for i in "12345" %}
+                                                    {% if forloop.counter <= review.rating %}
+                                                        <i class="fas fa-star"></i>
+                                                    {% else %}
+                                                        <i class="far fa-star"></i>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                        <p class="review-date">{{ review.created_at|date:"d.m.Y" }}</p>
+                                    </div>
+                                </div>
+                                {% if review.comment %}
+                                <p class="review-text">{{ review.comment }}</p>
+                                {% endif %}
+                            </div>
+                            {% empty %}
+                            <p style="text-align: center; color: #718096; padding: 2rem;">
+                                Відгуків поки немає. Станьте першим!
+                            </p>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="course-sidebar">
+            <div class="purchase-card fade-in">
+                <div class="price-section">
+                    {% if course.price > 0 %}
+                        <div class="current-price">{{ course.price }} ₴</div>
+                    {% else %}
+                        <div class="current-price">Безкоштовно</div>
+                    {% endif %}
+                </div>
+
+                {% if user.is_authenticated %}
+                    {% if is_enrolled %}
+                        <button class="btn-enroll" style="background: #48bb78;">
+                            <i class="fas fa-check"></i> Ви записані на курс
+                        </button>
+                        <button class="btn-preview">
+                            <i class="fas fa-play"></i> Продовжити навчання
+                        </button>
+                    {% else %}
+                        <button class="btn-enroll" onclick="enrollInCourse()">
+                            <i class="fas fa-shopping-cart"></i> Записатися на курс
+                        </button>
+                        <button class="btn-preview">
+                            <i class="fas fa-eye"></i> Переглянути демо
+                        </button>
+                    {% endif %}
+                {% else %}
+                    <a href="/admin/login/" class="btn-enroll" style="text-decoration: none; text-align: center;">
+                        <i class="fas fa-sign-in-alt"></i> Увійдіть для запису
+                    </a>
+                {% endif %}
+            </div>
+
+            <div class="course-features fade-in">
+                <h3 class="features-title">Що включено:</h3>
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-video"></i>
+                    </div>
+                    <div class="feature-text">{{ course.lessons.count }} уроків</div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="feature-text">{{ course.duration_hours }} годин контенту</div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-certificate"></i>
+                    </div>
+                    <div class="feature-text">Сертифікат після завершення</div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-infinity"></i>
+                    </div>
+                    <div class="feature-text">Довічний доступ</div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <div class="feature-text">Доступ з мобільних</div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-comments"></i>
+                    </div>
+                    <div class="feature-text">Підтримка викладача</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="/about/">Про нас</a>
+                <a href="/contacts/">Контакти</a>
+                <a href="/privacy-policy/">Політика конфіденційності</a>
+                <a href="/terms-of-use/">Умови використання</a>
+            </div>
+            <p>&copy; 2025 EduPlatform. Всі права захищені.</p>
+        </div>
+    </footer>
+
+    <script>
+ 
+        document.querySelectorAll('.tab-button').forEach(button => {
+            button.addEventListener('click', function() {
+                const tabId = this.dataset.tab;
+                
+   
+                document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+                
+                this.classList.add('active');
+                document.getElementById(tabId).classList.add('active');
+            });
+        });
+
+        function enrollInCourse() {
+            alert('Функція запису на курс буде реалізована пізніше');
+        }
+
+        function handleScrollAnimations() {
+            const elements = document.querySelectorAll('.fade-in');
+            const windowHeight = window.innerHeight;
+            
+            elements.forEach(element => {
+                const elementTop = element.getBoundingClientRect().top;
+                const elementVisible = 150;
+                
+                if (elementTop < windowHeight - elementVisible) {
+                    element.classList.add('visible');
+                }
+            });
+        }
+
+        window.addEventListener('scroll', handleScrollAnimations);
+        window.addEventListener('load', handleScrollAnimations);
+    </script>
+</body>
+</html>

@@ -1,0 +1,82 @@
+<form method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+
+  <div class="mb-3">
+    <label for="title" class="form-label">Назва курсу <span class="text-danger">*</span></label>
+    <input type="text" class="form-control" id="title" name="title" 
+           value="{{ editing_course.title }}" required>
+  </div>
+
+  <div class="mb-3">
+    <label for="short_description" class="form-label">Короткий опис</label>
+    <textarea class="form-control" id="short_description" name="short_description" 
+              rows="2">{{ editing_course.short_description }}</textarea>
+  </div>
+
+  <div class="mb-3">
+    <label for="description" class="form-label">Повний опис <span class="text-danger">*</span></label>
+    <textarea class="form-control" id="description" name="description" rows="5" required>{{ editing_course.description }}</textarea>
+  </div>
+
+  <div class="mb-3">
+    <label for="category" class="form-label">Категорія <span class="text-danger">*</span></label>
+    <select class="form-select" id="category" name="category" required>
+      {% for category in categories %}
+        <option value="{{ category.id }}" {% if editing_course.category.id == category.id %}selected{% endif %}>
+          {{ category.name }}
+        </option>
+      {% endfor %}
+    </select>
+  </div>
+
+
+  <div class="mb-3">
+    <label for="instructor" class="form-label">Інструктор <span class="text-danger">*</span></label>
+    <select class="form-select" id="instructor" name="instructor" required>
+      {% for instructor in instructors %}
+        <option value="{{ instructor.id }}" {% if editing_course.instructor.id == instructor.id %}selected{% endif %}>
+          {{ instructor.get_full_name|default:instructor.username }}
+        </option>
+      {% endfor %}
+    </select>
+  </div>
+
+
+  <div class="mb-3">
+    <label for="price" class="form-label">Ціна</label>
+    <input type="number" step="0.01" class="form-control" id="price" name="price" 
+           value="{{ editing_course.price }}">
+  </div>
+
+
+  <div class="mb-3">
+    <label for="difficulty" class="form-label">Складність</label>
+    <select class="form-select" id="difficulty" name="difficulty">
+      <option value="beginner" {% if editing_course.difficulty == 'beginner' %}selected{% endif %}>Початковий</option>
+      <option value="intermediate" {% if editing_course.difficulty == 'intermediate' %}selected{% endif %}>Середній</option>
+      <option value="advanced" {% if editing_course.difficulty == 'advanced' %}selected{% endif %}>Високий</option>
+    </select>
+  </div>
+
+  <div class="mb-3">
+    <label for="duration_hours" class="form-label">Тривалість (години)</label>
+    <input type="number" class="form-control" id="duration_hours" name="duration_hours" 
+           value="{{ editing_course.duration_hours }}">
+  </div>
+
+  <div class="form-check mb-3">
+    <input class="form-check-input" type="checkbox" id="is_published" name="is_published" {% if editing_course.is_published %}checked{% endif %}>
+    <label class="form-check-label" for="is_published">Опубліковано</label>
+  </div>
+
+  <div class="mb-3">
+    <label for="image" class="form-label">Зображення</label>
+    <input class="form-control" type="file" id="image" name="image">
+    {% if editing_course.image %}
+      <img src="{{ editing_course.image.url }}" alt="Course image" class="mt-2" style="max-width: 200px;">
+    {% endif %}
+  </div>
+
+  <input type="hidden" name="course_id" value="{{ editing_course.id }}">
+  <button type="submit" class="btn btn-primary">Зберегти</button>
+</form>

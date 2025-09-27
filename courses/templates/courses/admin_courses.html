@@ -1,0 +1,366 @@
+{% load static %}
+{% block content %}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+
+<div class="container my-5">
+  <h2 class="mb-4 fw-bold">Адмін-панель курсів</h2>
+  
+  <!-- Сообщения -->
+  {% if messages %}
+    <div class="alert alert-dismissible fade show" role="alert">
+      {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+          {{ message }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+  
+  <div class="row">
+    <!-- Ліва колонка - Додавання/Редагування курсу -->
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-header fw-semibold">
+          {% if editing_course %}
+            <i class="bi bi-pencil-square"></i> Редагувати курс
+          {% else %}
+            <i class="bi bi-plus-circle"></i> Додати новий курс
+          {% endif %}
+        </div>
+        <div class="card-body">
+          <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            {% if editing_course %}
+              <input type="hidden" name="course_id" value="{{ editing_course.id }}">
+            {% endif %}
+            
+            <!-- Назва курсу -->
+            <div class="mb-3">
+              <label for="title" class="form-label">Назва курсу <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" id="title" name="title" 
+                     value="{{ form_data.title|default:'' }}" required>
+            </div>
+
+            <!-- Короткий опис -->
+            <div class="mb-3">
+              <label for="short_description" class="form-label">Короткий опис</label>
+              <textarea class="form-control" id="short_description" name="short_description" 
+                        rows="2" placeholder="Короткий опис курсу">{{ form_data.short_description|default:'' }}</textarea>
+            </div>
+
+            <!-- Повний опис -->
+            <div class="mb-3">
+              <label for="description" class="form-label">Повний опис <span class="text-danger">*</span></label>
+              <textarea class="form-control" id="description" name="description" 
+                        rows="4" required>{{ form_data.description|default:'' }}</textarea>
+            </div>
+
+            <!-- Категорія -->
+            <div class="mb-3">
+              <label for="category" class="form-label">Категорія <span class="text-danger">*</span></label>
+              <select class="form-select" id="category" name="category" required>
+                <option value="">Оберіть категорію</option>
+                {% for cat in categories %}
+                  <option value="{{ cat.id }}" 
+                    {% if form_data.category == cat.id or form_data.category == cat.id|stringformat:"s" %}selected{% endif %}>
+                    {{ cat.name }}
+                  </option>
+                {% endfor %}
+              </select>
+            </div>
+
+            <!-- Викладач -->
+           <div class="mb-3">
+              <label for="instructor" class="form-label">Викладач</label>
+              <select class="form-select" id="instructor" name="instructor">
+                <option value="">Оберіть викладача</option>
+                {% for user in instructors %}
+                  <option value="{{ user.id }}" 
+                    {% if form_data.instructor == user.id or form_data.instructor == user.id|stringformat:"s" %}selected{% endif %}>
+                    {{ user.get_full_name|default:user.username }}
+                  </option>
+                {% endfor %}
+              </select>
+            </div>
+
+            <!-- Ціна -->
+            <div class="mb-3">
+              <label for="price" class="form-label">Ціна (грн)</label>
+              <input type="number" class="form-control" id="price" name="price" 
+                     value="{{ form_data.price|default:0 }}" min="0" step="0.01">
+              <div class="form-text">Залиште 0 для безкоштовного курсу</div>
+            </div>
+
+            <!-- Складність -->
+            <div class="mb-3">
+              <label for="difficulty" class="form-label">Складність</label>
+              <select class="form-select" id="difficulty" name="difficulty">
+                <option value="beginner" {% if form_data.difficulty == 'beginner' %}selected{% endif %}>Початковий</option>
+                <option value="intermediate" {% if form_data.difficulty == 'intermediate' %}selected{% endif %}>Середній</option>
+                <option value="advanced" {% if form_data.difficulty == 'advanced' %}selected{% endif %}>Просунутий</option>
+              </select>
+            </div>
+
+            <!-- Тривалість -->
+            <div class="mb-3">
+              <label for="duration_hours" class="form-label">Тривалість (години)</label>
+              <input type="number" class="form-control" id="duration_hours" name="duration_hours" 
+                     value="{{ form_data.duration_hours|default:0 }}" min="0">
+            </div>
+
+            <!-- Зображення -->
+            <div class="mb-3">
+              <label for="image" class="form-label">Зображення курсу</label>
+              <input type="file" class="form-control" id="image" name="image" accept="image/*">
+              {% if editing_course and editing_course.image %}
+                <div class="mt-2">
+                  <img src="{{ editing_course.image.url }}" alt="Поточне зображення" 
+                       class="img-thumbnail" style="max-height: 100px;">
+                </div>
+              {% endif %}
+            </div>
+
+            <!-- Статус публікації -->
+            <div class="mb-3 form-check">
+              <input type="checkbox" class="form-check-input" id="is_published" name="is_published" 
+                     {% if form_data.is_published %}checked{% endif %}>
+              <label class="form-check-label" for="is_published">
+                Опублікувати курс
+              </label>
+            </div>
+
+            <button type="submit" class="btn btn-primary">
+              <i class="bi bi-save"></i> 
+              {% if editing_course %}Оновити курс{% else %}Створити курс{% endif %}
+            </button>
+            
+            {% if editing_course %}
+              <a href="{% url 'admin_courses' %}" class="btn btn-secondary">
+                <i class="bi bi-x-circle"></i> Скасувати
+              </a>
+            {% endif %}
+          </form>
+        </div>
+      </div>
+
+      <!-- Швидкі дії -->
+      <div class="card mt-3">
+        <div class="card-header fw-semibold">
+          <i class="bi bi-lightning"></i> Швидкі дії
+        </div>
+        <div class="card-body">
+          <a href="{% url 'create_sample_courses' %}" class="btn btn-success btn-sm w-100 mb-2">
+            <i class="bi bi-plus-square"></i> Створити приклади курсів
+          </a>
+          <a href="{% url 'manage_categories' %}" class="btn btn-info btn-sm w-100 mb-2">
+            <i class="bi bi-tags"></i> Управління категоріями
+          </a>
+          <a href="{% url 'view_enrollments' %}" class="btn btn-warning btn-sm w-100">
+            <i class="bi bi-people"></i> Переглянути записи
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-header fw-semibold">
+          <i class="bi bi-book"></i> Список курсів ({{ courses_count|default:courses|length }})
+          <div class="float-end">
+            <small class="text-muted">Всього: {{ courses_count|default:courses|length }} курсів</small>
+          </div>
+        </div>
+        <div class="card-body p-0">
+          <div class="alert alert-info small">
+            <strong>Debug:</strong> Courses count: {{ courses_count }}, Courses length: {{ courses|length }}, 
+            Categories: {{ categories.count }}, Instructors: {{ instructors.count }}
+            {% if courses %}
+              <br>Первый курс: {{ courses.0.title }} (ID: {{ courses.0.id }})
+            {% else %}
+              <br>Список курсов пустой или не определен
+            {% endif %}
+          </div>
+          <div class="table-responsive">
+            <table class="table table-bordered table-hover mb-0">
+              <thead class="table-light">
+                <tr>
+                  <th style="width: 60px;">Фото</th>
+                  <th>Назва курсу</th>
+                  <th>Категорія</th>
+                  <th>Викладач</th>
+                  <th>Ціна</th>
+                  <th>Студентів</th>
+                  <th>Статус</th>
+                  <th style="width: 120px;">Дії</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for course in courses %}
+                <tr {% if not course.is_published %}class="table-warning"{% endif %}>
+                  <td>
+                    {% if course.image %}
+                      <img src="{{ course.image.url }}" alt="{{ course.title }}" 
+                           class="img-thumbnail" style="max-width: 50px; max-height: 50px;">
+                    {% else %}
+                      <div class="bg-secondary text-white text-center rounded" 
+                           style="width: 50px; height: 50px; line-height: 50px;">
+                        <i class="bi bi-book"></i>
+                      </div>
+                    {% endif %}
+                  </td>
+                  <td>
+                    <strong>{{ course.title|truncatechars:30 }}</strong>
+                    {% if course.short_description %}
+                      <br><small class="text-muted">{{ course.short_description|truncatechars:50 }}</small>
+                    {% endif %}
+                  </td>
+                  <td>
+                    {% if course.category %}
+                      <span class="badge bg-primary">{{ course.category.name }}</span>
+                    {% else %}
+                      <span class="text-muted">Без категорії</span>
+                    {% endif %}
+                  </td>
+                  <td>
+                    {% if course.instructor %}
+                      {{ course.instructor.get_full_name|default:course.instructor.username }}
+                    {% else %}
+                      <span class="text-muted">Не вказано</span>
+                    {% endif %}
+                  </td>
+                  <td>
+                    {% if course.price == 0 %}
+                      <span class="badge bg-success">Безкоштовно</span>
+                    {% else %}
+                      <strong>{{ course.price }} ₴</strong>
+                    {% endif %}
+                  </td>
+                  <td>
+                    <span class="badge bg-info">{{ course.total_enrollments|default:0 }}</span>
+                  </td>
+                  <td>
+                    {% if course.is_published %}
+                      <span class="badge bg-success">Опубліковано</span>
+                    {% else %}
+                      <span class="badge bg-warning">Чернетка</span>
+                    {% endif %}
+                  </td>
+                  <td>
+                    <div class="btn-group-vertical btn-group-sm" role="group">
+                      <a href="{% url 'course_edit' course.id %}" 
+                         class="btn btn-outline-primary btn-sm" title="Редагувати">
+                        <i class="bi bi-pencil-square"></i>
+                      </a>
+                      <a href="{% url 'course_delete' course.id %}" 
+                         class="btn btn-outline-danger btn-sm" title="Видалити"
+                         onclick="return confirm('Ви впевнені, що хочете видалити курс {{ course.title }}?')">
+                        <i class="bi bi-trash"></i>
+                      </a>
+                      {% if course.is_published %}
+                        <a href="/courses/{{ course.slug }}/" 
+                           class="btn btn-outline-info btn-sm" title="Переглянути" target="_blank">
+                          <i class="bi bi-eye"></i>
+                        </a>
+                      {% endif %}
+                    </div>
+                  </td>
+                </tr>
+                {% empty %}
+                <tr>
+                  <td colspan="8" class="text-center py-4">
+                    <i class="bi bi-inbox display-4 text-muted"></i>
+                    <p class="text-muted mt-2">Немає курсів</p>
+                    <a href="{% url 'create_sample_courses' %}" class="btn btn-success">
+                      Створити приклади курсів
+                    </a>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Статистика -->
+      <div class="row mt-3">
+        <div class="col-md-3">
+          <div class="card text-center bg-primary text-white">
+            <div class="card-body">
+              <h5>{{ courses_count|default:courses|length }}</h5>
+              <small>Усього курсів</small>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card text-center bg-success text-white">
+            <div class="card-body">
+              <h5>{{ published_courses|default:0 }}</h5>
+              <small>Опубліковано</small>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card text-center bg-info text-white">
+            <div class="card-body">
+              <h5>{{ total_enrollments|default:0 }}</h5>
+              <small>Записів студентів</small>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card text-center bg-warning text-white">
+            <div class="card-body">
+              <h5>{{ categories.count|default:0 }}</h5>
+              <small>Категорій</small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- JavaScript для покращення UX -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const imageInput = document.getElementById('image');
+    if (imageInput) {
+        imageInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    let preview = document.getElementById('image-preview');
+                    if (!preview) {
+                        preview = document.createElement('img');
+                        preview.id = 'image-preview';
+                        preview.className = 'img-thumbnail mt-2';
+                        preview.style.maxHeight = '100px';
+                        imageInput.parentNode.appendChild(preview);
+                    }
+                    preview.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    }
+    
+    document.querySelectorAll('.btn-outline-danger').forEach(button => {
+        button.addEventListener('click', function(e) {
+            const courseName = this.closest('tr').querySelector('strong').textContent;
+            if (!confirm(`Ви впевнені, що хочете видалити курс "${courseName}"?`)) {
+                e.preventDefault();
+            }
+        });
+    });
+
+    console.log('Курсів завантажено:', document.querySelectorAll('tbody tr:not(.empty)').length);
+});
+</script>
+
+{% endblock %}
